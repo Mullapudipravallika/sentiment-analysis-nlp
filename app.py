@@ -1,20 +1,19 @@
 import streamlit as st
 import pickle
 
-# Title
+# Load model
+model = pickle.load(open("model.pkl", "rb"))
+vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
+
 st.title("Sentiment Analysis App")
 
-# Input
-text = st.text_input("Enter text to analyze")
+text = st.text_input("Enter text")
 
-# Dummy prediction logic (replace later with your model)
-def predict_sentiment(text):
-    if "good" in text.lower() or "happy" in text.lower():
-        return "Positive "
-    else:
-        return "Negative "
-
-# Button
 if st.button("Analyze"):
-    result = predict_sentiment(text)
-    st.write("Sentiment:", result)
+    transformed = vectorizer.transform([text])
+    prediction = model.predict(transformed)[0]
+
+    if prediction == 1:
+        st.write("Positive 😊")
+    else:
+        st.write("Negative 😞")
